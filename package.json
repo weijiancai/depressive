@@ -12,13 +12,13 @@
     ],
     "icon": "images/icon.png",
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.browser"
     ],
     "main": "./out/src/extension",
     "contributes": {
         "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
+            "command": "extension.browser",
+            "title": "open browser"
         }]
     },
     "scripts": {

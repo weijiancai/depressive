@@ -1,0 +1,1 @@
+SELECT task_id from yw_jh where station_id='BJTJ' AND is_verify='1' and is_destroy='0' and receipts_class='GR' GROUP BY task_id having count(1) > 1;
