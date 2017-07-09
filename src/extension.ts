@@ -3,16 +3,19 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import BrowserContentProvider from './browser'
+import Repertory from './repertory'
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
     const browserContentProvider = new BrowserContentProvider();
     let browserRegister = vscode.workspace.registerTextDocumentContentProvider(BrowserContentProvider.scheme, browserContentProvider);
+    let repertory = new Repertory();
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "depressive" is now active!');
+    repertory.init();
 
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
@@ -22,11 +25,12 @@ export function activate(context: vscode.ExtensionContext) {
 
         // Display a message box to the user
         // vscode.window.showInformationMessage('Hello World!');
-
-        return vscode.commands.executeCommand('vscode.previewHtml', vscode.Uri.parse('http://'), vscode.ViewColumn.Two, 'Browser Preview').then((success) => {
-		}, (reason) => {
-			vscode.window.showErrorMessage(reason);
-		});
+        // let uri = vscode.Uri.parse('file:///home/wei_jc/桌面/test.html');
+        vscode.commands.executeCommand('vscode.previewHtml', 'http://www.baidu.com', vscode.ViewColumn.Two, '百度');
+        // return vscode.commands.executeCommand('vscode.previewHtml', vscode.Uri.parse('http://www.baidu.com'), vscode.ViewColumn.Two, 'Browser Preview').then((success) => {
+		// }, (reason) => {
+		// 	vscode.window.showErrorMessage(reason);
+		// });
     });
 
     context.subscriptions.push(disposable, browserRegister);

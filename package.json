@@ -3,7 +3,7 @@
     "displayName": "depressive",
     "description": "depressive",
     "version": "0.0.1",
-    "publisher": "depressive",
+    "publisher": "wei_jc",
     "engines": {
         "vscode": "^1.13.0"
     },
@@ -12,14 +12,24 @@
     ],
     "icon": "images/icon.png",
     "activationEvents": [
-        "onCommand:extension.browser"
+        "*"
     ],
     "main": "./out/src/extension",
     "contributes": {
         "commands": [{
             "command": "extension.browser",
             "title": "open browser"
-        }]
+        }],
+        "configuration": {
+            "title": "repertory configuration",
+            "properties": {
+                "host": {
+                    "type":"string",
+                    "default": "http://localhost:8888/repertory",
+                    "description": "同步主机地址"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
@@ -33,5 +43,8 @@
         "mocha": "^2.3.3",
         "@types/node": "^6.0.40",
         "@types/mocha": "^2.2.32"
+    },
+    "dependencies": {
+        "request": "^2.81.0"
     }
 }
