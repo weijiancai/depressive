@@ -8,31 +8,34 @@ import os = require('os')
 
 export default class Repertory {
     // 资料库目录
-    repertoryDir = path.join(os.homedir(), 'repertory');
+    static repertoryDir = path.join(os.homedir(), 'repertory');
     // 软件目录
-    softwareDir = path.join(this.repertoryDir, 'software');
+    softwareDir = path.join(Repertory.repertoryDir, 'software');
     // 文章目录
-    articleDir = path.join(this.repertoryDir, 'article');
+    articleDir = path.join(Repertory.repertoryDir, 'article');
     // 书籍目录
-    bookDir = path.join(this.repertoryDir, 'book');
+    bookDir = path.join(Repertory.repertoryDir, 'book');
     // 项目目录
-    projectDir = path.join(this.repertoryDir, 'project');
+    projectDir = path.join(Repertory.repertoryDir, 'project');
 
 
     init() {
         console.log('init......')
         let self = this;
         
-        if(!fs.existsSync(this.repertoryDir)) {
-            console.log('make dir : ', this.repertoryDir);
-            fs.mkdir(this.repertoryDir);
+        if(!fs.existsSync(Repertory.repertoryDir)) {
+            console.log('make dir : ', Repertory.repertoryDir);
+            fs.mkdir(Repertory.repertoryDir);
         }
        
         // 检查是否有repertory.json
         let host = vscode.workspace.getConfiguration().host;
         // 获得资料库配置
         request(host, function (error, response, body) {
-            let repertoryPath = path.join(self.repertoryDir, 'repertory.json');
+            if(error) {
+                return;
+            }
+            let repertoryPath = path.join(Repertory.repertoryDir, 'repertory.json');
             // 不存在，下载
             if (!fs.existsSync(repertoryPath)) {
                 fs.createWriteStream(repertoryPath).write(body)
@@ -40,11 +43,11 @@ export default class Repertory {
 
             let repertory = JSON.parse(body);
             self.init_vs_extentions(repertory);
-            self.init_project(repertory['project'])
+            self.init_project(repertory['project']);
+            self.init_article(repertory['article'])
         });
 
-        console.log(vscode.workspace.rootPath);
-        let config = vscode.workspace.getConfiguration()
+        let config = vscode.workspace.getConfiguration();
         console.log(vscode.extensions.all[0].id);
         for (let i = 0; i < vscode.extensions.all.length; i++) {
             console.log(vscode.extensions.all[i].id);
@@ -81,6 +84,14 @@ export default class Repertory {
                     VsCodeUtil.gitClone(element['vcs_url'], path.join(dir, element['name']));
                 }
             });
+        }
+    }
+
+    // 初始化文章
+    init_article(article) {
+        if(!fs.existsSync(this.articleDir)) {
+            console.log('make dir : ', this.articleDir);
+            fs.mkdir(this.articleDir);
         }
     }
 }

@@ -16,19 +16,46 @@
     ],
     "main": "./out/src/extension",
     "contributes": {
-        "commands": [{
-            "command": "extension.browser",
-            "title": "open browser"
-        }],
+        "commands": [
+            {
+                "command": "extension.browser",
+                "title": "open browser"
+            },
+            {
+                "command": "NewRepertoryFile",
+                "title": "新建",
+                "icon":{
+                    "light": "resources/light/AddFile.svg",
+					"dark": "resources/dark/AddFile.svg"
+                }
+            }
+        ],
         "configuration": {
             "title": "repertory configuration",
             "properties": {
                 "host": {
-                    "type":"string",
+                    "type": "string",
                     "default": "http://localhost:8888/repertory",
                     "description": "同步主机地址"
                 }
             }
+        },
+        "views": {
+            "explorer": [
+                {
+                    "id": "repertory",
+                    "name": "资料库"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "NewRepertoryFile",
+                    "when": "view == repertory",
+                    "group": "navigation"
+                }
+            ]
         }
     },
     "scripts": {
