@@ -3,9 +3,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import Repertory from './repertory';
 
-export default class RepertoryTreeProvider implements vscode.TreeDataProvider<RepertoryItem> {
+export class RepertoryTreeProvider implements vscode.TreeDataProvider<RepertoryItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<RepertoryItem | undefined> = new vscode.EventEmitter<RepertoryItem | undefined>();
 	readonly onDidChangeTreeData: vscode.Event<RepertoryItem | undefined> = this._onDidChangeTreeData.event;
+	public selectedItem: RepertoryItem;
 
 	constructor(private rootPath?: string) {
 		if(!rootPath) {
@@ -46,21 +47,29 @@ export default class RepertoryTreeProvider implements vscode.TreeDataProvider<Re
 	}
 }
 
-class RepertoryItem extends vscode.TreeItem {
+export class RepertoryItem extends vscode.TreeItem {
     constructor(
 		public readonly label: string,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly parent?: string
 	) {
 		super(label, collapsibleState);
-		this.command = this.collapsibleState == 1 ? void 0 : {
-			command: 'openRepertoryFile',
-			arguments: [this.parent + path.sep + this.label],
+		this.command =  {
+			command: 'selectRepertoryFile',
+			arguments: [this],
 				title: '打开文件'
 		};
 		this.iconPath = {
 				light: this.collapsibleState == 1 ? path.join(__filename, '..', '..', '..', 'resources', 'light', 'folder.svg') : path.join(__filename, '..', '..', '..', 'resources', 'light', 'document.svg'),
 				dark: this.collapsibleState == 1 ? path.join(__filename, '..', '..', '..', 'resources', 'dark', 'folder.svg') : path.join(__filename, '..', '..', '..', 'resources', 'dark', 'document.svg')
 			}
+	}
+
+	getPath():string {
+		return this.parent + path.sep + this.label;
+	}
+
+	isDir():boolean {
+		return this.collapsibleState == 1;
 	}
 }

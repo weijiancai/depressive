@@ -32,13 +32,14 @@ export default class Repertory {
         let host = vscode.workspace.getConfiguration().host;
         // 获得资料库配置
         request(host, function (error, response, body) {
-            if(error) {
-                return;
-            }
             let repertoryPath = path.join(Repertory.repertoryDir, 'repertory.json');
             // 不存在，下载
             if (!fs.existsSync(repertoryPath)) {
                 fs.createWriteStream(repertoryPath).write(body)
+            }
+
+            if(!body) {
+                body = fs.readFileSync(repertoryPath);
             }
 
             let repertory = JSON.parse(body);

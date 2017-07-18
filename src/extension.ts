@@ -4,7 +4,9 @@
 import * as vscode from 'vscode';
 import BrowserContentProvider from './browser'
 import Repertory from './repertory'
-import RepertoryTreeProvider from './repertoryTree'
+import {RepertoryTreeProvider, RepertoryItem} from './repertoryTree'
+import path = require('path');
+import fs = require('fs');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -37,9 +39,31 @@ export function activate(context: vscode.ExtensionContext) {
 		// });
     });
 
-    vscode.commands.registerCommand('openRepertoryFile', (file:string) => {
-        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse('file://' + file));
-    })
+    // 选择资料库文件
+    vscode.commands.registerCommand('selectRepertoryFile', (item:RepertoryItem, isDir:boolean) => {
+        repertoryTreeProvider.selectedItem = item;
+        if(item.isDir()) {
+            return;
+        }
+        let path = 'file:///' + item.getPath().replace(/\\/g, '/');
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(path));
+    });
+    // 新建资料库文件
+    vscode.commands.registerCommand('NewRepertoryFile', () => {
+        let item = repertoryTreeProvider.selectedItem;
+        if(!item) {
+            vscode.window.showErrorMessage('请选中资料库文件！');
+            return;
+        }
+        let path = item.getPath();
+        vscode.window.showInputBox({value: path, valueSelection: [path.length, path.length]}).then((value) => {
+            fs.createWriteStream(value);
+
+            let path = 'file:///' + value.replace(/\\/g, '/');
+            vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(path));
+            repertoryTreeProvider.refresh(); // 刷新
+        });
+    });
 
     context.subscriptions.push(disposable, browserRegister);
 }
