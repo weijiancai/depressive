@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     // 选择资料库文件
-    vscode.commands.registerCommand('selectRepertoryFile', (item:RepertoryItem, isDir:boolean) => {
+    let cmdSelectRepertoryFile = vscode.commands.registerCommand('extension.selectRepertoryFile', (item:RepertoryItem, isDir:boolean) => {
         repertoryTreeProvider.selectedItem = item;
         if(item.isDir()) {
             return;
@@ -49,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(path));
     });
     // 新建资料库文件
-    vscode.commands.registerCommand('NewRepertoryFile', () => {
+    vscode.commands.registerCommand('extension.NewRepertoryFile', () => {
         let item = repertoryTreeProvider.selectedItem;
         if(!item) {
             vscode.window.showErrorMessage('请选中资料库文件！');
@@ -64,8 +64,20 @@ export function activate(context: vscode.ExtensionContext) {
             repertoryTreeProvider.refresh(); // 刷新
         });
     });
+    // 删除资料库文件
+    vscode.commands.registerCommand('extension.DelRepertoryFile', () => {
+        let item = repertoryTreeProvider.selectedItem;
+        if(!item) {
+            vscode.window.showErrorMessage('请选中资料库文件！');
+            return;
+        }
+        let path = item.getPath();
+        fs.unlinkSync(path);
+        repertoryTreeProvider.refresh(); // 刷新
+        vscode.window.showInformationMessage('删除文件成功：' + path);
+    });
 
-    context.subscriptions.push(disposable, browserRegister);
+    context.subscriptions.push(disposable, browserRegister, cmdSelectRepertoryFile);
 }
 
 // this method is called when your extension is deactivated

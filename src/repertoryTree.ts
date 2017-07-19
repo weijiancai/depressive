@@ -55,7 +55,7 @@ export class RepertoryItem extends vscode.TreeItem {
 	) {
 		super(label, collapsibleState);
 		this.command =  {
-			command: 'selectRepertoryFile',
+			command: 'extension.selectRepertoryFile',
 			arguments: [this],
 				title: '打开文件'
 		};

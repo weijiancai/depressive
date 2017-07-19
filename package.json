@@ -22,11 +22,19 @@
                 "title": "open browser"
             },
             {
-                "command": "NewRepertoryFile",
-                "title": "新建",
+                "command": "extension.NewRepertoryFile",
+                "title": "新建资料库文件",
                 "icon":{
                     "light": "resources/light/AddFile.svg",
 					"dark": "resources/dark/AddFile.svg"
+                }
+            },
+            {
+                "command": "extension.DelRepertoryFile",
+                "title": "删除资料库文件",
+                "icon":{
+                    "light": "resources/light/action-close.svg",
+					"dark": "resources/dark/action-close.svg"
                 }
             }
         ],
@@ -51,7 +59,12 @@
         "menus": {
             "view/title": [
                 {
-                    "command": "NewRepertoryFile",
+                    "command": "extension.NewRepertoryFile",
+                    "when": "view == repertory",
+                    "group": "navigation"
+                },
+                {
+                    "command": "extension.DelRepertoryFile",
                     "when": "view == repertory",
                     "group": "navigation"
                 }
